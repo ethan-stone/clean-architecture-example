@@ -1,6 +1,6 @@
 import { APIGatewayProxyResultV2 } from "aws-lambda";
 
-export const internalError = () => {
+export const internalError = (): APIGatewayProxyResultV2 => {
   return {
     statusCode: 500,
     body: JSON.stringify({
