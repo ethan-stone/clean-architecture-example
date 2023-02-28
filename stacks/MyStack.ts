@@ -1,9 +1,9 @@
-import { StackContext, Api } from "@serverless-stack/resources";
+import { StackContext, Api } from "sst/constructs";
 
 export function MyStack({ stack }: StackContext) {
   const api = new Api(stack, "api", {
     routes: {
-      "GET /": "functions/lambda.handler",
+      "POST /": "services/functions/subscribeUser/handler.main",
     },
   });
   stack.addOutputs({

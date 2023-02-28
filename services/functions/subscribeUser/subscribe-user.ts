@@ -1,5 +1,5 @@
 import { InsertUserFn } from "@/db/user";
-import { sendEmail, SendEmailFn } from "@/email/send-email";
+import { SendEmailFn } from "@/email/send-email";
 import { randomUUID } from "crypto";
 
 export async function subscribeUser(
@@ -15,7 +15,7 @@ export async function subscribeUser(
     name: userData.name,
   });
 
-  await sendEmail({
+  await ctx.sendEmail({
     from: `no-reply@example.com`,
     html: `<p>welcome</p>`,
     plaintext: `welcome`,

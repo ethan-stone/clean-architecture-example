@@ -13,6 +13,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@clean-architecture-example/core": "./services/core",
+      "@": "./services",
     },
   },
 });

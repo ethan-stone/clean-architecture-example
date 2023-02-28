@@ -11,7 +11,7 @@ const bodySchema = z.object({
   name: z.string(),
 });
 
-export const handler: APIGatewayProxyHandlerV2 = async (event) => {
+export const main: APIGatewayProxyHandlerV2 = async (event) => {
   const bodyResult = await bodySchema.spa(JSON.parse(event.body || "{}"));
 
   if (!bodyResult.success) {

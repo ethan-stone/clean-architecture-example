@@ -8,7 +8,15 @@ While we tease Ran a lot about his crazy design patterns, they do have some meri
 
 Again I am not saying we blindly follow the Strategy Pattern, but we can definitely embrace some principles of it. We have already done this in the `asset-management` service, but I think we should continue to improve, and also refactor the other services.
 
-This repo uses the example of subscribing a user to an email newsletter. Suppose there is some frontend with two inputs, one for the users name and one for the users email, and then a button to send a request an api endpoint powered by AWS APIGateway and Lambda Integrations (much like our core services). The entrypoint for the lambda function that is triggered is in `services/subscribeUser/handler.ts`.
+This repo uses the example of subscribing a user to an email newsletter. Suppose there is some frontend with two inputs, one for the users name and one for the users email, and then a button to send a request an api endpoint powered by AWS APIGateway and Lambda Integrations (much like our core services). The entrypoint for the lambda function that is triggered is in `services/subscribeUser/handler.ts`. It parses the request body using zod, and if it fails returns a `badRequest`. If it succeeds it calls a function called `subscribeUser` the email and name, as well as `insertUser` and `sendEmail`.
+
+Inside of `subscribeUser`, it calls `insertUser` with the passed in email and name and a uuid, and it calls `sendEmail` with the appropriate arguments. This is where our `business logic` happens.
+
+Notice how in `subscribeUser` we do not directly import functions for `insertUser` and `sendEmail`. Instead they are defined in the parameters of the function in the `ctx` object as types `InsertUserFn` and `SendEmailFn`. Now, why do this rather than just importing the functions at the top and using them? There are two reasons.
+
+The first is that by defining an interface for these functions and making the caller of `subscribeUser` pass them in, we are forcing a strict contract of what `subscribeUser` needs in order to work, and it is up to the caller to implement a function that adheres to that contract. The implementation can change without the business logic needing to change. For example if we switch from SES so SendGrid in this example.
+
+The second is that this is way more testable. If we were to just import and use the implementation of `insertUser` and `sendEmail` we would have to test it like we did in `asset-management` service, and create spys and mocks of these files. We can simply create a fake function that returns some fake data that adheres to the interface and pass it in.
 
 <img width="598" alt="image" src="https://user-images.githubusercontent.com/46607985/221945133-fe74e582-6070-4eed-8240-89fa7ca7fc51.png">
 
