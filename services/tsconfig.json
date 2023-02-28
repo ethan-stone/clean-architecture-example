@@ -1,6 +1,6 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["db", "email", "functions", "http"],
+  "include": ["./**/*.ts"],
   "compilerOptions": {
     "module": "esnext",
     "target": "es2017",
@@ -8,9 +8,7 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/db/*": ["./db/*"],
-      "@/email/*": ["./email/*"],
-      "@/http/*": ["./http/*"]
+      "@/*": ["./*"]
     }
   }
 }
