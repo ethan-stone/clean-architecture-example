@@ -10,6 +10,8 @@ Again I am not saying we blindly follow the Strategy Pattern, but we can definit
 
 This repo uses the example of subscribing a user to an email newsletter. Suppose there is some frontend with two inputs, one for the users name and one for the users email, and then a button to send a request an api endpoint powered by AWS APIGateway and Lambda Integrations (much like our core services). The entrypoint for the lambda function that is triggered is in `services/subscribeUser/handler.ts`.
 
+<img width="598" alt="image" src="https://user-images.githubusercontent.com/46607985/221945133-fe74e582-6070-4eed-8240-89fa7ca7fc51.png">
+
 # Unit Testing
 
 If you look at our services, you'll notice we usually make a `__tests__` folder for each service that mirrors the structure of the source code. This is fine but to me I think there is a better way. The purpose of unit tests is to test the smallest possible unit of code. So to me it makes sense to put the unit test right next to the unit of code it is supposed to be testing.
