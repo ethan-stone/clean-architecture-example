@@ -6,6 +6,11 @@
     "target": "es2017",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@/db/*": ["./db/*"],
+      "@/email/*": ["./email/*"],
+      "@/http/*": ["./http/*"]
+    }
   }
 }
