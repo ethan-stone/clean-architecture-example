@@ -10,7 +10,7 @@ Again I am not saying we blindly follow the Strategy Pattern, but we can definit
 
 This repo uses the example of subscribing a user to an email newsletter. Suppose there is some frontend with two inputs, one for the users name and one for the users email, and then a button to send a request an api endpoint powered by AWS APIGateway and Lambda Integrations (much like our core services). The entrypoint for the lambda function that is triggered is in `services/subscribeUser/handler.ts`. It parses the request body using zod, and if it fails returns a `badRequest`. If it succeeds it calls a function called `subscribeUser` with the email and name, as well as `getUserByEmail`, `insertUser` and `sendEmail`. Then it handles errors thrown by `subscribeUser` and returns the appropriate APIGateway result.
 
-Inside of `subscribeUser`, it calls `getUser` to check for a user that already has that email, calls `insertUser` with the passed in email and name and a uuid, and it calls `sendEmail` with the appropriate arguments. This is where our `business logic` happens.
+Inside of `subscribeUser`, it calls `getUserByEmail` to check for a user that already has that email, calls `insertUser` with the passed in email and name and a uuid, and it calls `sendEmail` with the appropriate arguments. This is where our `business logic` happens.
 
 Notice how in `subscribeUser` we do not directly import functions for `getUserByEmail`, `insertUser` and `sendEmail`. Instead they are defined in the parameters of the function in the `ctx` object as types `GetUserByEmail`, `InsertUserFn` and `SendEmailFn`, and utilize dependency injection. Now, why do this rather than just importing the functions at the top and using them? There are two reasons.
 
