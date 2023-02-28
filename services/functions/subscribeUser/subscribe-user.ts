@@ -1,14 +1,24 @@
-import { InsertUserFn } from "@/db/user";
+import { GetUserByEmailFn, InsertUserFn } from "@/db/user";
 import { SendEmailFn } from "@/email/send-email";
 import { randomUUID } from "crypto";
+
+export class EmailInUseError extends Error {}
 
 export async function subscribeUser(
   userData: {
     name: string;
     email: string;
   },
-  ctx: { insertUser: InsertUserFn; sendEmail: SendEmailFn }
+  ctx: {
+    getUserByEmail: GetUserByEmailFn;
+    insertUser: InsertUserFn;
+    sendEmail: SendEmailFn;
+  }
 ) {
+  const existingUser = await ctx.getUserByEmail(userData.email);
+
+  if (existingUser) throw new EmailInUseError();
+
   const user = await ctx.insertUser({
     id: randomUUID(),
     email: userData.email,
