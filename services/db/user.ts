@@ -8,7 +8,9 @@ export type User = {
 
 export type InsertUserFn = (user: User) => Promise<User>;
 
-export const insertUser: InsertUserFn = async (user) => {
+export async function insertUser([
+  user,
+]: Parameters<InsertUserFn>): ReturnType<InsertUserFn> {
   const client = await getClient();
   const coll = client.db().collection<User>("users");
 
@@ -17,11 +19,13 @@ export const insertUser: InsertUserFn = async (user) => {
   const insertedUser = await coll.findOne({ id: user.id });
 
   return insertedUser as User;
-};
+}
 
 export type GetUserByEmailFn = (email: string) => Promise<User | null>;
 
-export const getUserByEmail: GetUserByEmailFn = async (email) => {
+export async function getUserByEmail([
+  email,
+]: Parameters<GetUserByEmailFn>): ReturnType<GetUserByEmailFn> {
   const client = await getClient();
   const coll = client.db().collection<User>("users");
 
@@ -30,4 +34,4 @@ export const getUserByEmail: GetUserByEmailFn = async (email) => {
   });
 
   return user as User | null;
-};
+}
