@@ -11,7 +11,9 @@ export type SendEmailFn = (args: {
   from: string;
 }) => Promise<void>;
 
-export const sendEmail: SendEmailFn = async (args) => {
+export async function sendEmail([
+  args,
+]: Parameters<SendEmailFn>): ReturnType<SendEmailFn> {
   await client.send(
     new SendEmailCommand({
       Source: args.from,
@@ -35,4 +37,4 @@ export const sendEmail: SendEmailFn = async (args) => {
       },
     })
   );
-};
+}
