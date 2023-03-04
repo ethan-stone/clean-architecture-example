@@ -1,12 +1,6 @@
-# Description
-
-Right now every service in the core services is doing things differently in regard to how they interact with the database, how they validate data, how they handle errors, and how they return HTTP responses. To allow us to develop features faster and allow members of the team to understand services they have never worked on faster, we should standardize the structure of our code and come up with some internal “best practices”.
-
 # Clean Architecture
 
 While we tease Ran a lot about his crazy design patterns, they do have some merit to them and I think we should embrace some ideas. Specifically, the idea of defining interfaces, and then our business logic uses those interfaces. If you are familiar with the [Design Patterns](https://www.youtube.com/watch?v=WQ8bNdxREHU) book, then the pattern that best fits this approach is the Strategy Pattern. You can find a good video of it [here](https://www.youtube.com/watch?v=WQ8bNdxREHU).
-
-Again I am not saying we blindly follow the Strategy Pattern, but we can definitely embrace some principles of it. We have already done this in the `asset-management` service, but I think we should continue to improve, and also refactor the other services.
 
 This repo uses the example of subscribing a user to an email newsletter. Suppose there is some frontend with two inputs, one for the users name and one for the users email, and then a button to send a request an api endpoint powered by AWS APIGateway and Lambda Integrations (much like our core services). The entrypoint for the lambda function that is triggered is in `services/subscribeUser/handler.ts`. It parses the request body using zod, and if it fails returns a `badRequest`. If it succeeds it calls a function called `subscribeUser` with the email and name, as well as `getUserByEmail`, `insertUser` and `sendEmail`. Then it handles errors thrown by `subscribeUser` and returns the appropriate APIGateway result.
 
@@ -16,7 +10,7 @@ Notice how in `subscribeUser` we do not directly import functions for `getUserBy
 
 The first is that by defining an interface for these functions and making the caller of `subscribeUser` pass them in, we are forcing a strict contract of what `subscribeUser` needs in order to work, and it is up to the caller to implement a function that adheres to that contract. The implementation can change without the business logic needing to change. For example if we switch from SES so SendGrid in this example.
 
-The second is that this is way more testable. If we were to just import and use the implementation of `insertUser` and `sendEmail` we would have to test it like we did in `asset-management` service, and create spys and mocks of these files. We can simply create a fake function that returns some fake data that adheres to the interface and pass it in. See `services/functions/subscribeUser/subscribe-user.test.ts` for an example.
+The second is that this is way more testable. If we were to just import and use the implementation of `insertUser` and `sendEmail` we would have to test by and creating spys and mocks of these files. We can simply create a fake function that returns some fake data that adheres to the interface and pass it in. See `services/functions/subscribeUser/subscribe-user.test.ts` for an example.
 
 If we look at the structure of the code as a diagram it looks like this.
 <img width="651" alt="image" src="https://user-images.githubusercontent.com/46607985/221964470-86e55588-0f57-4d9e-8bc9-d7f85525aed1.png">
